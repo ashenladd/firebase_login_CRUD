@@ -1,47 +1,49 @@
-import 'package:firebase_login/sign_up_page.dart';
 import 'package:firebase_login/widgets/app_large_text.dart';
 import 'package:firebase_login/widgets/app_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
+    List images = ['g.png', 't.png', 'f.png'];
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(children: [
-          Container(
-            height: h * 0.3,
-            width: w,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("img/loginimg.png"), fit: BoxFit.cover),
+          Stack(children: [
+            Container(
+              width: w,
+              height: h * 0.3,
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("img/signup.png"), fit: BoxFit.cover)),
             ),
-          ),
+            Center(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: h * 0.15,
+                  ),
+                  const CircleAvatar(
+                    backgroundColor: Colors.white70,
+                    radius: 60,
+                    backgroundImage: AssetImage('img/profile1.png'),
+                  )
+                ],
+              ),
+            ),
+          ]),
           Container(
             margin: const EdgeInsets.only(left: 20, right: 20),
             width: w,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const AppLargeText(
-                text: "Hello",
-              ),
-              const AppText(
-                text: "Sign Into Your Account",
-                size: 20,
-                color: Colors.grey,
-              ),
               const SizedBox(
                 height: 50,
               ),
@@ -58,18 +60,17 @@ class _LoginPageState extends State<LoginPage> {
                     ]),
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: "Email",
-                    prefixIcon: const Icon(
-                      Icons.email,
-                      color: Colors.deepOrangeAccent,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: const BorderSide(color: Colors.white)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: const BorderSide(color: Colors.white)),
-                  ),
+                      hintText: "Email",
+                      prefixIcon: const Icon(
+                        Icons.email,
+                        color: Colors.deepOrangeAccent,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: const BorderSide(color: Colors.white)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: const BorderSide(color: Colors.white))),
                 ),
               ),
               const SizedBox(
@@ -105,15 +106,6 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                children: [
-                  Expanded(child: Container()),
-                  const AppText(
-                    text: "Forgot your password?",
-                    color: Colors.grey,
-                  ),
-                ],
-              ),
             ]),
           ),
           const SizedBox(height: 70),
@@ -126,28 +118,45 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(30)),
               child: const Center(
                 child: (AppLargeText(
-                  text: 'Sign In',
+                  text: 'Sign Up',
                   color: Colors.white,
                   size: 27,
                 )),
               )),
-          SizedBox(height: w * 0.2),
+          const SizedBox(
+            height: 10,
+          ),
           RichText(
-            text: TextSpan(
-                text: "Don't have an account?",
-                style: const TextStyle(color: Colors.grey, fontSize: 16),
-                children: [
-                  TextSpan(
-                    text: " Create",
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => Get.to(() => const SignUpPage()),
-                  ),
-                ]),
-          )
+              text: TextSpan(
+            text: "Have an account?",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[500],
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Get.back();
+              },
+          )),
+          SizedBox(height: w * 0.2),
+          AppText(
+            text: "Sign up using the following method",
+            color: (Colors.grey[500])!,
+          ),
+          Wrap(
+              children: List.generate(3, (index) {
+            return Padding(
+              padding: const EdgeInsetsDirectional.all(10),
+              child: CircleAvatar(
+                radius: 23,
+                backgroundColor: Colors.grey[500],
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage("img/${images[index]}"),
+                ),
+              ),
+            );
+          }))
         ]),
       ),
     );
