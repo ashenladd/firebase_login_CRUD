@@ -1,9 +1,12 @@
+import 'package:firebase_login/auth_controller.dart';
 import 'package:firebase_login/widgets/app_large_text.dart';
 import 'package:firebase_login/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
+  final String email;
+
+  const WelcomePage({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +45,14 @@ class WelcomePage extends StatelessWidget {
             width: w,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                AppLargeText(
+              children: [
+                const AppLargeText(
                   text: "Welcome",
                   size: 36,
                   color: Colors.black54,
                 ),
                 AppText(
-                  text: "User@gmail.com",
+                  text: email,
                   color: Colors.grey,
                 )
               ],
@@ -58,20 +61,24 @@ class WelcomePage extends StatelessWidget {
           const SizedBox(
             height: 200,
           ),
-          Container(
-              margin: const EdgeInsets.symmetric(horizontal: 90),
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(
-                  image: const DecorationImage(
-                      image: AssetImage('img/loginbtn.png'), fit: BoxFit.cover),
-                  borderRadius: BorderRadius.circular(30)),
-              child: const Center(
-                child: (AppLargeText(
-                  text: 'Sign Out',
-                  color: Colors.white,
-                  size: 27,
+          GestureDetector(
+            onTap: () => AuthController.instance.LogOut(),
+            child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 90),
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                decoration: BoxDecoration(
+                    image: const DecorationImage(
+                        image: AssetImage('img/loginbtn.png'),
+                        fit: BoxFit.cover),
+                    borderRadius: BorderRadius.circular(30)),
+                child: const Center(
+                  child: (AppLargeText(
+                    text: 'Sign Out',
+                    color: Colors.white,
+                    size: 27,
+                  )),
                 )),
-              )),
+          ),
         ]),
       ),
     );

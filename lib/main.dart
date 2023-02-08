@@ -1,8 +1,14 @@
+import 'package:firebase_login/auth_controller.dart';
+import 'package:firebase_login/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'login_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  //Memastikan binding firebase dengan AuthController
+  WidgetsFlutterBinding.ensureInitialized();
+  //Agar bisa menggunakan AuthController di setiap file (depedency injection)
+  await Firebase.initializeApp().then((value) => Get.put(AuthController()));
   runApp(const MyApp());
 }
 
@@ -18,7 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
+      home: const SplashScreen(),
     );
   }
 }

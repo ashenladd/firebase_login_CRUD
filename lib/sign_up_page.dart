@@ -1,3 +1,4 @@
+import 'package:firebase_login/auth_controller.dart';
 import 'package:firebase_login/widgets/app_large_text.dart';
 import 'package:firebase_login/widgets/app_text.dart';
 import 'package:flutter/gestures.dart';
@@ -9,6 +10,8 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var emailController = TextEditingController();
+    var passwordController = TextEditingController();
     List images = ['g.png', 't.png', 'f.png'];
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -59,6 +62,7 @@ class SignUpPage extends StatelessWidget {
                           color: Colors.grey.withOpacity(0.2))
                     ]),
                 child: TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                       hintText: "Email",
                       prefixIcon: const Icon(
@@ -88,6 +92,8 @@ class SignUpPage extends StatelessWidget {
                           color: Colors.grey.withOpacity(0.2))
                     ]),
                 child: TextField(
+                  obscureText: true,
+                  controller: passwordController,
                   decoration: InputDecoration(
                     hintText: "Password",
                     prefixIcon: const Icon(
@@ -109,20 +115,26 @@ class SignUpPage extends StatelessWidget {
             ]),
           ),
           const SizedBox(height: 70),
-          Container(
-              margin: const EdgeInsets.symmetric(horizontal: 90),
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(
-                  image: const DecorationImage(
-                      image: AssetImage('img/loginbtn.png'), fit: BoxFit.cover),
-                  borderRadius: BorderRadius.circular(30)),
-              child: const Center(
-                child: (AppLargeText(
-                  text: 'Sign Up',
-                  color: Colors.white,
-                  size: 27,
+          GestureDetector(
+            //Trim() menghapus baris baru
+            onTap: () => AuthController.instance.register(
+                emailController.text.trim(), passwordController.text.trim()),
+            child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 90),
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                decoration: BoxDecoration(
+                    image: const DecorationImage(
+                        image: AssetImage('img/loginbtn.png'),
+                        fit: BoxFit.cover),
+                    borderRadius: BorderRadius.circular(30)),
+                child: const Center(
+                  child: (AppLargeText(
+                    text: 'Sign Up',
+                    color: Colors.white,
+                    size: 27,
+                  )),
                 )),
-              )),
+          ),
           const SizedBox(
             height: 10,
           ),

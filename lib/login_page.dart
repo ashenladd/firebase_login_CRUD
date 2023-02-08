@@ -1,3 +1,4 @@
+import 'package:firebase_login/auth_controller.dart';
 import 'package:firebase_login/sign_up_page.dart';
 import 'package:firebase_login/widgets/app_large_text.dart';
 import 'package:firebase_login/widgets/app_text.dart';
@@ -15,6 +16,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
+    var emailController = TextEditingController();
+    var passwordController = TextEditingController();
+
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -57,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.grey.withOpacity(0.2))
                     ]),
                 child: TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     hintText: "Email",
                     prefixIcon: const Icon(
@@ -87,6 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.grey.withOpacity(0.2))
                     ]),
                 child: TextField(
+                  controller: passwordController,
+                  obscureText: true,
                   decoration: InputDecoration(
                     hintText: "Password",
                     prefixIcon: const Icon(
@@ -117,20 +124,25 @@ class _LoginPageState extends State<LoginPage> {
             ]),
           ),
           const SizedBox(height: 70),
-          Container(
-              margin: const EdgeInsets.symmetric(horizontal: 90),
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(
-                  image: const DecorationImage(
-                      image: AssetImage('img/loginbtn.png'), fit: BoxFit.cover),
-                  borderRadius: BorderRadius.circular(30)),
-              child: const Center(
-                child: (AppLargeText(
-                  text: 'Sign In',
-                  color: Colors.white,
-                  size: 27,
+          GestureDetector(
+            onTap: () => AuthController.instance.Login(
+                emailController.text.trim(), passwordController.text.trim()),
+            child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 90),
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                decoration: BoxDecoration(
+                    image: const DecorationImage(
+                        image: AssetImage('img/loginbtn.png'),
+                        fit: BoxFit.cover),
+                    borderRadius: BorderRadius.circular(30)),
+                child: const Center(
+                  child: (AppLargeText(
+                    text: 'Sign In',
+                    color: Colors.white,
+                    size: 27,
+                  )),
                 )),
-              )),
+          ),
           SizedBox(height: w * 0.2),
           RichText(
             text: TextSpan(
