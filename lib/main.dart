@@ -3,12 +3,15 @@ import 'package:firebase_login/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 Future<void> main() async {
-  //Memastikan binding firebase dengan AuthController
   WidgetsFlutterBinding.ensureInitialized();
-  //Agar bisa menggunakan AuthController di setiap file (depedency injection)
   await Firebase.initializeApp().then((value) => Get.put(AuthController()));
+  await Hive.initFlutter();
+  await Hive.openBox("favoriteFoodsBox");
+
   runApp(const MyApp());
 }
 
