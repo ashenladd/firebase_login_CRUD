@@ -173,11 +173,16 @@ class _WelcomePageState extends State<WelcomePage> {
                   color: Colors.black54,
                 ),
                 AppText(
-                  text: "Email: ${widget.email}",
+                  text: "${widget.email} as Admin",
                   color: Colors.grey,
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 20,
+                ),
+                const AppLargeText(
+                  text: 'List Of User Profiles',
+                  size: 24,
+                  color: Colors.black54,
                 ),
                 StreamBuilder(
                     stream: _users.snapshots(),
@@ -190,11 +195,22 @@ class _WelcomePageState extends State<WelcomePage> {
                             itemBuilder: (context, index) {
                               final DocumentSnapshot documentSnapshot =
                                   streamSnapshot.data!.docs[index];
-                              if (documentSnapshot['id'] ==
-                                  documentSnapshot.id) {
-                                return Column(
+                              return Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    AppText(
+                                      text:
+                                          "Email: ${documentSnapshot['email']}",
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
                                     AppText(
                                       text: "Name: ${documentSnapshot['name']}",
                                       color: Colors.grey,
@@ -252,19 +268,14 @@ class _WelcomePageState extends State<WelcomePage> {
                                           ),
                                         )),
                                   ],
-                                );
-                              }
-                              return const Center(
-                                  child: CircularProgressIndicator());
+                                ),
+                              );
                             });
                       }
                       return const Center(child: CircularProgressIndicator());
                     }),
                 const SizedBox(
-                  height: 5,
-                ),
-                const SizedBox(
-                  height: 5,
+                  height: 20,
                 ),
                 const AppLargeText(
                   text: 'Your Favortie Food',
@@ -280,9 +291,8 @@ class _WelcomePageState extends State<WelcomePage> {
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                              color: const Color.fromRGBO(239, 70, 55, 0.3),
-                              width: 2)),
+                          border:
+                              Border.all(color: Colors.orangeAccent, width: 2)),
                       child: GestureDetector(
                         onTap: () {
                           _showForm(context, currentItem['key']);

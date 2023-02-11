@@ -35,7 +35,7 @@ class AuthController extends GetxController {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      final json = {'name': "", 'age': "", 'city': "", 'id': docUser.id};
+      final json = {'name': "", 'age': "", 'city': "", 'email': email};
       //Create Doc
       await docUser.set(json);
     } catch (e) {
