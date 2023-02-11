@@ -276,7 +276,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   height: 20,
                 ),
                 const AppLargeText(
-                  text: 'Your Favortie Food',
+                  text: 'Your Favorite Foods',
                   size: 24,
                   color: Colors.black54,
                 ),
