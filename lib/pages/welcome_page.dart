@@ -197,9 +197,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                   streamSnapshot.data!.docs[index];
                               return Container(
                                 padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                                width: w,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
