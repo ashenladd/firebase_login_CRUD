@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_login/login_page.dart';
-import 'package:firebase_login/welcome_page.dart';
+import 'package:firebase_login/pages/login_page.dart';
+import 'package:firebase_login/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,9 +30,14 @@ class AuthController extends GetxController {
   }
 
   Future<void> register(String email, password) async {
+    final docUser = FirebaseFirestore.instance.collection('users').doc();
     try {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
+
+      final json = {'name': "", 'age': "", 'city': "", 'id': docUser.id};
+      //Create Doc
+      await docUser.set(json);
     } catch (e) {
       Get.snackbar("About User", "User Message",
           backgroundColor: Colors.redAccent,

@@ -1,5 +1,5 @@
 import 'package:firebase_login/auth_controller.dart';
-import 'package:firebase_login/sign_up_page.dart';
+import 'package:firebase_login/pages/sign_up_page.dart';
 import 'package:firebase_login/widgets/app_large_text.dart';
 import 'package:firebase_login/widgets/app_text.dart';
 import 'package:flutter/gestures.dart';

@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_login/auth_controller.dart';
+import 'package:firebase_login/pages/edit_profile_page.dart';
 import 'package:firebase_login/widgets/app_large_text.dart';
 import 'package:firebase_login/widgets/app_text.dart';
+import 'package:firebase_login/widgets/column_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -16,13 +19,14 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   final TextEditingController _nameFavoritefood = TextEditingController();
+  final CollectionReference _users =
+      FirebaseFirestore.instance.collection('users');
 
   List<Map<String, dynamic>> _items = [];
 
   //Creating box
   final _favoriteFoodsBox = Hive.box("favoriteFoodsBox");
 
-  //Ini akan selalu jalan di setiap state app untuk mengecek item/refresh item
   @override
   void initState() {
     super.initState();
@@ -30,29 +34,16 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _refreshItems() {
-    //Pertama, kita mendapatkan setiap data
-    //_favoriteFoodsBox.keys.map akan menangkap setiap key pada map dan
-    //nantinya diinialisasikan sebagai variable key
     final data = _favoriteFoodsBox.keys.map((key) {
-      //karena kita sudah menyimpan setiap key-nya pada variabel key
-      //kita bisa menggunakan get(key), untuk mendapatkan value dari key tersebut, value-nya disimpan di item
       final item = _favoriteFoodsBox.get(key);
-      //mengembalikan setiap key dan valuenya menjadi list
       return {"key": key, "name": item["name"]};
     }).toList();
-
-    //Kedua, setelah mendapatkan setiap data kita menyimpannya di _items
-    //kita bisa menggunakan data.reversed.toList() untuk sort items dari paling baru ke paling lama
     setState(() {
       _items = data.toList();
     });
   }
 
-  //Fungsi createItem memasukkan input ke dalam box
-  //Map mirip seperti dictionary, dengan key dan value
-  //Key-nya adalah string,value-nya dynamic
   Future<void> _createItem(Map<String, dynamic> newItem) async {
-    //Hive.box jika menggunakan add akan auto-generate key seperti (0, 1, 2)
     await _favoriteFoodsBox.add(newItem);
     _refreshItems(); //Refresh UI
   }
@@ -67,12 +58,8 @@ class _WelcomePageState extends State<WelcomePage> {
     _refreshItems();
   }
 
-  //Fungsi menampilkan form add
   void _showForm(BuildContext ctx, int? itemKey) async {
     if (itemKey != null) {
-      //element ini berisi value dari suatu index, misalnya kyk _items[2],
-      //oleh karenanya ketika ditambakan ['key'] sama saja
-      //dengan _items[2]['key'] untuk mengakses value dari suatu key map di list
       final existingItem =
           _items.firstWhere((element) => element['key'] == itemKey);
       _nameFavoritefood.text = existingItem['name'];
@@ -89,7 +76,6 @@ class _WelcomePageState extends State<WelcomePage> {
                 top: 15,
                 left: 15,
                 right: 15,
-                //padding bottom akan menyesuaikan dengan popup keyboard
                 bottom: MediaQuery.of(ctx).viewInsets.bottom),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -117,7 +103,6 @@ class _WelcomePageState extends State<WelcomePage> {
                           itemKey, {'name': _nameFavoritefood.text.trim()});
                     }
 
-                    //Ini agar ketika kita klik icon add, teks yang diisi sebelumnnya tidak muncul lagi
                     _nameFavoritefood.text = "";
                     Get.back();
                   },
@@ -188,11 +173,98 @@ class _WelcomePageState extends State<WelcomePage> {
                   color: Colors.black54,
                 ),
                 AppText(
-                  text: widget.email,
+                  text: "Email: ${widget.email}",
                   color: Colors.grey,
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
+                ),
+                StreamBuilder(
+                    stream: _users.snapshots(),
+                    builder:
+                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                      if (streamSnapshot.hasData) {
+                        return ColumnBuilder(
+                            textDirection: TextDirection.ltr,
+                            itemCount: streamSnapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              final DocumentSnapshot documentSnapshot =
+                                  streamSnapshot.data!.docs[index];
+                              if (documentSnapshot['id'] ==
+                                  documentSnapshot.id) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppText(
+                                      text: "Name: ${documentSnapshot['name']}",
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    AppText(
+                                      text: "Age: ${documentSnapshot['age']}",
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    AppText(
+                                      text: "City: ${documentSnapshot['city']}",
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          Get.to(EditProfilePage(
+                                            documentSnapshot: documentSnapshot,
+                                          ));
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 5),
+                                          decoration: BoxDecoration(
+                                              image: const DecorationImage(
+                                                  image: AssetImage(
+                                                      'img/loginbtn.png'),
+                                                  fit: BoxFit.cover),
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: const [
+                                              AppText(
+                                                text: "Edit Profile",
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Icon(
+                                                Icons.edit,
+                                                color: Colors.white,
+                                              )
+                                            ],
+                                          ),
+                                        )),
+                                  ],
+                                );
+                              }
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            });
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    }),
+                const SizedBox(
+                  height: 5,
+                ),
+                const SizedBox(
+                  height: 5,
                 ),
                 const AppLargeText(
                   text: 'Your Favortie Food',
